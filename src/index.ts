@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { Client, GatewayIntentBits } from 'discord.js';
+import { rateLimit } from 'express-rate-limit';
 
 dotenv.config();
 
@@ -52,3 +53,22 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 })
+
+/////////    Rate limiters
+const globalLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 min
+    max: 100,
+    message: { error: 'Too many requests' }
+});
+
+const authLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 h
+    max: 10,
+    message: {
+        error: 'Too many attempts'
+    }
+});
+app.use(globalLimiter);
+app.use('/auth', authLimiter);
+
+/////////
