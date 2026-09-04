@@ -39,7 +39,7 @@ app.get('/', (_req, res) => {
 ////////
 
 //////// Redirect to Discord OAuth
-app.get('auth/discord', (_req, res) => {
+app.get('/auth/discord', (_req, res) => {
     const params = new URLSearchParams({
         client_id: process.env.DISCORD_CLIENT_ID || '',
         redirect_uri: REDIRECT_URI,
